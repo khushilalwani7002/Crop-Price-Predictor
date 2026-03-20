@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriPredict - Crop Price Dashboard</title>
+    <style>
+        /* CSS: This styles your page */
+        body {
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                              url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 450px;
+            text-align: center;
+        }
+
+        h2 { color: #2e7d32; margin-bottom: 20px; }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; color: #333; }
+        select, input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover { background-color: #1b5e20; }
+
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2e7d32;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Results Styling */
+        .results { margin-top: 25px; display: none; }
+        .price-card {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+            color: #fff;
+        }
+        .min { background-color: #ffa000; }   /* Orange */
+        .max { background-color: #d32f2f; }   /* Red */
+        .modal { background-color: #388e3c; } /* Green */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Crop Price Predictor</h2>
+    
+    <div class="input-group">
+        <label>Crop Name</label>
+        <select id="crop">
+            <option>Wheat</option>
+            <option>Rice</option>
+            <option>Maize</option>
+            <option>Cotton</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>District / Market</label>
+        <input type="text" id="district" placeholder="e.g. Pune, Ludhiana">
+    </div>
+
+    <button id="predictBtn" onclick="runPrediction()">Predict Market Prices</button>
+
+    <div id="loader" class="loader"></div>
+
+    <div id="resultSection" class="results">
+        <div class="price-card min">
+            <strong>Min Price:</strong> <span id="minPrice">₹0</span>
+        </div>
+        <div class="price-card max">
+            <strong>Max Price:</strong> <span id="maxPrice">₹0</span>
+        </div>
+        <div class="price-card modal">
+            <strong>Modal Price:</strong> <span id="modalPrice">₹0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function runPrediction() {
+        // Hide previous results and show loader
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+
+        // Simulate a 2-second delay (this is where the AI works later)
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            
+            // Mock Values for now (Your backend will fill these later)
+            document.getElementById('minPrice').innerText = "₹1,950";
+            document.getElementById('maxPrice').innerText = "₹2,500";
+            document.getElementById('modalPrice').innerText = "₹2,200";
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
