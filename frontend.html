@@ -84,17 +84,67 @@
     
     <div class="input-group">
         <label>Crop Name</label>
-        <select id="crop">
-            <option>Wheat</option>
-            <option>Rice</option>
-            <option>Maize</option>
-            <option>Cotton</option>
+        <input type="text" id="crop" placeholder="e.g. Wheat, Cotton">
+    </div>
+
+     <div class="input-group">
+        <label>State</label>
+        <select id="state">
+            <option>Andhra Pradesh</option>
+            <option>Assam</option>
+            <option>Bihar</option>
+            <option>Chandigarh</option>
+            <option>Chattisgarh</option>
+            <option>Goa</option>
+            <option>Gujarat</option>
+            <option>Haryana</option>
+            <option>Himachal Pradesh</option>
+            <option>Jammu and Kashmir</option>
+            <option>Jharkhand</option>
+            <option>Karnataka</option>
+            <option>Kerala</option>
+            <option>Madhya Pradesh</option>
+            <option>Maharashtra</option>
+            <option>Meghalaya</option>
+            <option>Nagaland</option>
+            <option>NCT of Delhi</option>
+            <option>Odisha</option>
+            <option>Puducherry</option>
+            <option>Punjab</option>
+            <option>Rajasthan</option>
+            <option>Tamil Nadu</option>
+            <option>Telangana</option>
+            <option>Tripura</option>
+            <option>Uttar Pradesh</option>
+            <option>Uttarakhand</option>
+            <option>West Bengal</option>
         </select>
     </div>
 
     <div class="input-group">
         <label>District / Market</label>
         <input type="text" id="district" placeholder="e.g. Pune, Ludhiana">
+    </div>
+
+     <div class="input-group">
+        <label>Grades</label>
+        <select id="grades">
+            <option>FAQ</option>
+            <option>Grade A</option>
+            <option>Grade B</option>
+            <option>Grade C</option>
+            <option>Grade Range-1</option>
+            <option>Grade Range-2</option>
+            <option>Grade Range-3</option>
+            <option>Large</option>
+            <option>Local</option>
+            <option>Medium</option>
+            <option>Other</option>
+            <option>Small</option>
+            <option>Super Fine</option>
+            <option>Very Large</option>
+            <option>Very Small</option>
+        </select>
     </div>
 
     <button id="predictBtn" onclick="runPrediction()">Predict Market Prices</button>
