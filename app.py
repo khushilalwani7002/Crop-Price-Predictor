@@ -1,5 +1,4 @@
-pip.install Flask requests jsonify CORS pickle
-from flask import Flask, requests, jsonify
+from flask import Flask, request, jsonify
 import pickle
 import pandas as pd
 from flask_cors import CORS # This allows your HTML to talk to this Python script
