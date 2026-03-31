@@ -22,26 +22,31 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    
-    # 1. Convert text to numbers using the encoders
     try:
+        state_name = data['state'].strip() 
+        dist_name = data['district'].strip()
+        comm_name = data['commodity'].strip()
+        # All these lines must be indented 4 spaces
         s_num = le_state.transform([data['state']])[0]
         d_num = le_dist.transform([data['district']])[0]
         c_num = le_comm.transform([data['commodity']])[0]
-        
-        inputs = [[s_num, d_num, 0, c_num, 0,0,0]]
 
-        # 2. Get 3 different predictions
+        inputs = [[s_num, d_num, 0, c_num, 0, 0, 0]]
+
         val_min = m_min.predict(inputs)[0]
         val_max = m_max.predict(inputs)[0]
         val_modal = m_modal.predict(inputs)[0]
 
+        # The return is part of the 'try' block, so it stays indented
         return jsonify({
-            "min_price": val_min,
-            "max_price": val_max,
-            "modal_price": val_modal
+            "min_price": round(float(val_min), 2),
+            "max_price": round(float(val_max), 2),
+            "modal_price": round(float(val_modal), 2)
         })
+
     except Exception as e:
+        # This lines up with 'try'
+        print(f"Error details: {e}")
         return jsonify({"error": f"Value not recognized: {str(e)}"}), 400
 
 if __name__ == '__main__':
