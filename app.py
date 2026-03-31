@@ -28,13 +28,8 @@ def predict():
         s_num = le_state.transform([data['state']])[0]
         d_num = le_dist.transform([data['district']])[0]
         c_num = le_comm.transform([data['commodity']])[0]
-
-        market_dummy = 0 
-        variety_dummy = 0
-        min_p_dummy = 0
-        max_p_dummy = 0
         
-        inputs = [[s_num, d_num, market_dummy, c_num, variety_dummy, min_p_dummy, max_p_dummy]]
+        inputs = [[s_num, d_num, 0, c_num, 0,0,0]]
 
         # 2. Get 3 different predictions
         val_min = m_min.predict(inputs)[0]
