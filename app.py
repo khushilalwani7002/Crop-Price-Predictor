@@ -34,7 +34,7 @@ def predict():
 
         return jsonify({
             "min_price": m_min,
-            "max_price": m_max
+            "max_price": m_max,
             "modal_price": m_modal
         })
     except Exception as e:
