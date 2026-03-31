@@ -241,9 +241,9 @@
                 const data = await response.json();
 
                 // 4. Update the UI with the ACTUAL AI prediction
-                document.getElementById('minPrice').innerText = "₹" + data.min_price;
-                document.getElementById('maxPrice').innerText = "₹" + data.max_price;
-                document.getElementById('modalPrice').innerText = "₹" + data.modal_price;
+                document.getElementById('min_price').innerText = "₹" + data.min_price;
+                document.getElementById('max_price').innerText = "₹" + data.max_price;
+                document.getElementById('modal_price').innerText = "₹" + data.modal_price;
 
             } catch (error) {
                 console.error("Error connecting to backend:", error);
