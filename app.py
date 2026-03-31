@@ -42,9 +42,9 @@ def predict():
         val_modal = m_modal.predict(inputs)[0]
 
         return jsonify({
-            "min_price": m_min,
-            "max_price": m_max,
-            "modal_price": m_modal
+            "min_price": val_min,
+            "max_price": val_max,
+            "modal_price": val_modal
         })
     except Exception as e:
         return jsonify({"error": f"Value not recognized: {str(e)}"}), 400
