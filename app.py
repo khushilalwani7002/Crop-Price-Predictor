@@ -19,6 +19,18 @@ m_modal = pickle.load(open('modal_price.pkl', 'rb'))
 def home():
     return "<h1>Crop Price Prediction API is Running!</h1><p>Send a POST request to /predict to get data.</p>"
 
+@app.route('/get_states', methods=['GET'])
+def get_states():
+    return jsonify(sorted(le_state.classes_.tolist()))
+
+@app.route('/get_districts', methods=['GET'])
+def get_districts():
+    return jsonify(sorted(le_dist.classes_.tolist()))
+
+@app.route('/get_commodities', methods=['GET'])
+def get_commodities():
+    return jsonify(sorted(le_comm.classes_.tolist()))
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
