@@ -131,49 +131,26 @@
     <div class="container">
         <h2>Crop Price Predictor</h2>
 
-        <div class="input-group">
-            <label>Commodities</label>
-            <input type="text" id="commodityChoice" placeholder="e.g. Rice, Potatoes">
-        </div>
+<div class="input-group">
+    <label>Commodities</label>
+    <select id="commodityChoice">
+        <option value="">-- Select Commodity --</option>
+    </select>
+</div>
 
-        <div class="input-group">
-            <label>State</label>
-            <select id="state">
-                <option>Andhra Pradesh</option>
-                <option>Assam</option>
-                <option>Bihar</option>
-                <option>Chandigarh</option>
-                <option>Chattisgarh</option>
-                <option>Goa</option>
-                <option>Gujarat</option>
-                <option>Haryana</option>
-                <option>Himachal Pradesh</option>
-                <option>Jammu and Kashmir</option>
-                <option>Jharkhand</option>
-                <option>Karnataka</option>
-                <option>Kerala</option>
-                <option>Madhya Pradesh</option>
-                <option>Maharashtra</option>
-                <option>Meghalaya</option>
-                <option>Nagaland</option>
-                <option>NCT of Delhi</option>
-                <option>Odisha</option>
-                <option>Puducherry</option>
-                <option>Punjab</option>
-                <option>Rajasthan</option>
-                <option>Tamil Nadu</option>
-                <option>Telangana</option>
-                <option>Tripura</option>
-                <option>Uttar Pradesh</option>
-                <option>Uttarakhand</option>
-                <option>West Bengal</option>
-            </select>
-        </div>
+<div class="input-group">
+    <label>State</label>
+    <select id="state">
+        <option value="">-- Select State --</option>
+    </select>
+</div>
 
-        <div class="input-group">
-            <label>District / Market</label>
-            <input type="text" id="districtChoice" placeholder="e.g. Pune, Ludhiana">
-        </div>
+<div class="input-group">
+    <label>District / Market</label>
+    <select id="districtChoice">
+        <option value="">-- Select District --</option>
+    </select>
+</div>
 
         <div class="input-group">
             <label>Grades</label>
@@ -214,6 +191,32 @@
     </div>
 
     <script>
+        // This runs automatically when you open the page
+window.onload = function() {
+    const dropdownConfigs = {
+        'state': 'http://127.0.0.1:5000/get_states',
+        'districtChoice': 'http://127.0.0.1:5000/get_districts',
+        'commodityChoice': 'http://127.0.0.1:5000/get_commodities'
+    };
+
+    for (let id in dropdownConfigs) {
+        fetch(dropdownConfigs[id])
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById(id);
+                // Clear existing options except the first placeholder
+                select.innerHTML = select.options[0].outerHTML; 
+                
+                data.forEach(item => {
+                    let option = document.createElement('option');
+                    option.text = item;
+                    option.value = item;
+                    select.add(option);
+                });
+            })
+            .catch(err => console.error(`Failed to load ${id}:`, err));
+    }
+};
         async function runPrediction() {
             // 1. Capture the values the user selected
             const state = document.getElementById('state').value;
