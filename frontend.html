@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriPredict - Crop Price Dashboard</title>
+    <style>
+        /* CSS: This styles your page */
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 450px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2e7d32;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Results Styling */
+        .results {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .price-card {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .min {
+            background-color: #ffa000;
+        }
+
+        /* Orange */
+        .max {
+            background-color: #d32f2f;
+        }
+
+        /* Red */
+        .modal {
+            background-color: #388e3c;
+        }
+
+        /* Green */
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Crop Price Predictor</h2>
+
+<div class="input-group">
+    <label>Commodities</label>
+    <select id="commodityChoice">
+        <option value="">-- Select Commodity --</option>
+    </select>
+</div>
+
+<div class="input-group">
+    <label>State</label>
+    <select id="state">
+        <option value="">-- Select State --</option>
+    </select>
+</div>
+
+<div class="input-group">
+    <label>District / Market</label>
+    <select id="districtChoice">
+        <option value="">-- Select District --</option>
+    </select>
+</div>
+
+        <div class="input-group">
+            <label>Grades</label>
+            <select id="grade">
+                <option>FAQ</option>
+                <option>Grade A</option>
+                <option>Grade B</option>
+                <option>Grade C</option>
+                <option>Grade Range-1</option>
+                <option>Grade Range-2</option>
+                <option>Grade Range-3</option>
+                <option>Large</option>
+                <option>Local</option>
+                <option>Medium</option>
+                <option>Other</option>
+                <option>Small</option>
+                <option>Super Fine</option>
+                <option>Very Large</option>
+                <option>Very Small</option>
+            </select>
+        </div>
+
+        <button id="predictBtn" onclick="runPrediction()">Predict Market Prices</button>
+
+        <div id="loader" class="loader"></div>
+
+        <div id="resultSection" class="results">
+            <div class="price-card min">
+                <strong>Min Price:</strong> <span id="min_price">₹</span>
+            </div>
+            <div class="price-card max">
+                <strong>Max Price:</strong> <span id="max_price">₹</span>
+            </div>
+            <div class="price-card modal">
+                <strong>Modal Price:</strong> <span id="modal_price">₹</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This runs automatically when you open the page
+window.onload = function() {
+    const dropdownConfigs = {
+        'state': 'http://127.0.0.1:5000/get_states',
+        'districtChoice': 'http://127.0.0.1:5000/get_districts',
+        'commodityChoice': 'http://127.0.0.1:5000/get_commodities'
+    };
+
+    for (let id in dropdownConfigs) {
+        fetch(dropdownConfigs[id])
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById(id);
+                // Clear existing options except the first placeholder
+                select.innerHTML = select.options[0].outerHTML; 
+                
+                data.forEach(item => {
+                    let option = document.createElement('option');
+                    option.text = item;
+                    option.value = item;
+                    select.add(option);
+                });
+            })
+            .catch(err => console.error(`Failed to load ${id}:`, err));
+    }
+};
+        async function runPrediction() {
+            // 1. Capture the values the user selected
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('districtChoice').value;
+            const commodity = document.getElementById('commodityChoice').value;
+            const grade = document.getElementById('grade').value;
+
+            // 2. Show the loader and hide old results
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+
+            try {
+                // 3. Send the data to your Python Backend (Flask)
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        state: state,
+                        district: district,
+                        commodity: commodity,
+                        grade: grade
+                    })
+                });
+
+                const data = await response.json();
+
+                // 4. Update the UI with the ACTUAL AI prediction
+                document.getElementById('min_price').innerText = "₹" + data.min_price;
+                document.getElementById('max_price').innerText = "₹" + data.max_price;
+                document.getElementById('modal_price').innerText = "₹" + data.modal_price;
+
+            } catch (error) {
+                console.error("Error connecting to backend:", error);
+                alert("Make sure your Python Flask server is running!");
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('resultSection').style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
